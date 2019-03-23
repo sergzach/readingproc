@@ -9,14 +9,14 @@ The next problems are solved:
 
 `pip install https://github.com/sergzach/readingproc/archive/master.zip`
 
-### *Just an example*
+### *Example*
 
-Let's get `stdout` of `tail -f file` for *10 seconds*. To read iterate with `iter_run()` method.
+Let's get `stdout` of `cat myfile`. To read iterate with `iter_run()` method.
 
 ```
 from readingproc import ReadingProc
 
-proc = ReadingProc('cat my_file')
+proc = ReadingProc('cat myfile')
 proc.start()
 for data in proc.iter_run(total_timeout=10.0):
 	print(data.stdout.decode())
