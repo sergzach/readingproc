@@ -189,7 +189,7 @@ class ReadingProc:
 	@property
 	def alive(self):
 		"""
-		True if a process is alive.
+		True if a target process is alive.
 		"""
 		return self._proc is not None and self._proc.poll() is None	
 

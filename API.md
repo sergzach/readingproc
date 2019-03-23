@@ -22,7 +22,7 @@ Set to True if the program requires virtual terminal to work properly. Example: 
 ## ReadingProc methods and attributes
 
 ### Attribute alive
-True if a process is alive.
+True if a target process is alive.
 
 ### Attribute pid
 Use this function to get a PID.
