@@ -1,7 +1,7 @@
 ## ReadingProc contructor(cmd, shell=True, read_chunk=4096, stdin_terminal=False)
 The class constructor.
 
-Parameters
+**Parameters**
 
 `cmd: str`
 
@@ -24,7 +24,7 @@ Set to True if the program requires virtual terminal to work properly. Example: 
 ### Method iter_run(chunk_timeout=None, total_timeout=None)
 Iterate raw byte output (not waiting starting a new line).
 
-Parameters:
+**Parameters**
 
 `chunk_timeout: float`
 
