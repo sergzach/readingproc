@@ -125,6 +125,9 @@ class ReadingProc:
 
 
 	def send_stdin(self, s_bytes):
+		"""
+		Send bytes to stdin of a target process.
+		"""
 		self._check_started()
 		self._proc.stdin.write(s_bytes)
 		self._proc.stdin.flush()

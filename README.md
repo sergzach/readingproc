@@ -81,4 +81,8 @@ finally:
     print('Process done, expiration status: {}.'.format(expired))
 ```
 
+Example Notes.
+
+The examples is for `Python 3`. For `Python 2` you create the same code. `data.stdout` and `data.stderr` in `Python 2` have `str` type, in `Python 3` they have `bytes` type (processes send bytes which can be decoded to strings).
+
 [A very short API](API.md)

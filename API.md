@@ -29,11 +29,13 @@ Use this function to get a PID.
 If shell==True, this is the process ID of the spawned shell.
 To get source correct pid construct ReadingProc with shell=False.
 
+### Method send_stdin(s_bytes)
+Send bytes to stdin of a target process.
+
 ### Method start()
 Run the process (call the function after the constructor and before iter_run()).
 
 ### Method iter_run(chunk_timeout=None, total_timeout=None)
-
 Iterate raw byte output (not waiting starting a new line).
 
 Parameters:
