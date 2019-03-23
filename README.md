@@ -11,16 +11,17 @@ The next problems are solved:
 
 ### *Just an example*
 
-Let's get stdout of `tail -f file` for 10 seconds.
+Let's get stdout of `tail -f file` for *10 seconds*.
 
 ```
 from readingproc import ReadingProc, TotalTimeout
 
+max_read_seconds=10.0
 proc = ReadingProc('tail -f my_file')
 tail_content = b''
 proc.start()
 try:
-	for data in proc.iter_run():
+	for data in proc.iter_run(total_timeout=max_read_seconds):
 		tail_content += data.stdout
 except TotalTimeout:
 	pass
