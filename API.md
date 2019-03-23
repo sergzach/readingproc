@@ -5,7 +5,7 @@ The class constructor.
 
 **Parameters**
 
-`cmd: str`
+`cmd: str or list`
 
 Shell command to execute.
 
