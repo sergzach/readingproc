@@ -17,7 +17,7 @@ The next problems are solved:
 
 Let's get `stdout` of `cat myfile`. To read iterate with `iter_run()` method.
 
-```
+```python
 from readingproc import ReadingProc
 
 proc = ReadingProc('cat myfile')
@@ -30,7 +30,7 @@ for data in proc.iter_run():
 
 *Tailing file and return control when there is no new information for 10 seconds.*
 
-```
+```python
 from readingproc import ReadingProc, ChunkTimeout
 
 proc = ReadingProc('tail -f myfile')
@@ -45,7 +45,7 @@ except ChunkTimeout:
 ```
 
 *Read output for 60 seconds. If the duration exceeds then exception TotalTimeout occurs.*
-```
+```python
 from readingproc import ReadingProc, TotalTimeout
 
 proc = ReadingProc('cat myfile; sleep 70; echo OK')
@@ -62,7 +62,7 @@ except TotalTimeout:
 
 *Getting control when expired, make some actions then continue reading output.*
 
-```
+```python
 from readingproc import ReadingProc, TotalTimeout
 
 expired = False
