@@ -19,7 +19,7 @@ from readingproc import ReadingProc
 proc = ReadingProc('cat myfile')
 proc.start()
 for data in proc.iter_run():
-	print(data.stdout.decode())
+    print(data.stdout.decode())
 ```
 
 ### More examples
@@ -33,11 +33,11 @@ proc = ReadingProc('tail -f myfile')
 proc.start()
 
 try:
-	for data in proc.iter_run(chunk_timeout=10.0):
-    	print(data.stdout.decode())
+    for data in proc.iter_run(chunk_timeout=10.0):
+        print(data.stdout.decode())
 except ChunkTimeout:
-	# there were no new lines for the last 10 secs
-	print('Error. No new lines for 10 seconds.')	
+    # there were no new lines for the last 10 secs
+    print('Error. No new lines for 10 seconds.')    
 ```
 
 Read output for 60 seconds. If the duration exceeds then exception TotalTimeout occurs.
@@ -48,12 +48,12 @@ proc = ReadingProc('cat myfile; sleep 70; echo OK')
 proc.start()
 
 try:
-	for data in proc.iter_run(total_timeout=60.0):
-		print(data.stdout.decode())
+    for data in proc.iter_run(total_timeout=60.0):
+        print(data.stdout.decode())
 except TotalTimeout:
-	print('60 seconds passed but the process still alive.')
-	# lets terminate the process
-	proc.terminate()
+    print('60 seconds passed but the process still alive.')
+    # lets terminate the process
+    proc.terminate()
 ```
 
 Getting control when expired, make some actions then continue reading output.
@@ -66,15 +66,15 @@ expired = False
 proc = ReadingProc('cat myfile; sleep 70; echo OK')
 proc.start()
 try:
-	for data in proc.iter_run(total_timeout=60.0):
-		print(data.stdout.decode())
+    for data in proc.iter_run(total_timeout=60.0):
+        print(data.stdout.decode())
 except TotalTimeout:
-	expired = True
+    expired = True
     # process is expired... Continue anyway.
     for data in proc.iter_run():
-		print(data.stdout.decode())
+        print(data.stdout.decode())
 finally:
-	print('Process done, expiration status: {}.'.format(expired))
+    print('Process done, expiration status: {}.'.format(expired))
 ```
 
 
