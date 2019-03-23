@@ -21,6 +21,19 @@ Set to True if the program requires virtual terminal to work properly. Example: 
 
 ## ReadingProc methods and attributes
 
+### Method iter_run(chunk_timeout=None, total_timeout=None)
+Iterate raw byte output (not waiting starting a new line).
+
+Parameters:
+
+`chunk_timeout: float`
+
+Timeout to read one item in iter_run() loop.
+
+`total_timeout: float`
+
+Timeout from start executing process; can only occurs in iter_run() loop.
+
 ### Attribute alive
 True if a target process is alive.
 
@@ -34,19 +47,6 @@ Send bytes to stdin of a target process.
 
 ### Method start()
 Run the process (call the function after the constructor and before iter_run()).
-
-### Method iter_run(chunk_timeout=None, total_timeout=None)
-Iterate raw byte output (not waiting starting a new line).
-
-Parameters:
-
-`chunk_timeout: float`
-
-Timeout to read one item in iter_run() loop.
-
-`total_timeout: float`
-
-Timeout from start executing process; can only occurs in iter_run() loop.
 
 ### Method kill()
 Kill the process (send SIGKILL).
