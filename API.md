@@ -54,6 +54,8 @@ Kill the process (send SIGKILL).
 ### Method terminate()
 Try to terminate the process (send SIGTERM).
 
+## Classes to work with reading data and exceptions
+
 ### Class ProcessData(stdout, stderr)
 A class descibing an item which is returned in every loop of ReadingProc.iter_run(). Access to stdout got: `data.stdout`, stderr: `data.stderr`.
 
