@@ -11,25 +11,22 @@ The next problems are solved:
 
 ### *Just an example*
 
-Let's get stdout of `tail -f file` for *10 seconds*.
+Let's get `stdout` of `tail -f file` for *10 seconds*. To read iterate with `iter_run()` method.
 
 ```
 from readingproc import ReadingProc, TotalTimeout
 
-max_read_seconds=10.0
 proc = ReadingProc('tail -f my_file')
-tail_content = b''
 proc.start()
 try:
-	for data in proc.iter_run(total_timeout=max_read_seconds):
-		tail_content += data.stdout
+	for data in proc.iter_run(total_timeout=10.0):
+		print(data.stdout.decode())
 except TotalTimeout:
 	pass
-finally:
-	tail_content = tail_content.decode() # convert from bytes to str
-	print('Tail content if myfile is: {}'.format(tail_content))
 
 ```
+
+### 
 
 ### Supported Python versions
 * 2.7
