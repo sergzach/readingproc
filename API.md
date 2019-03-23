@@ -1,4 +1,4 @@
-## ReadingProc contructor(cmd, shell=True, read_chunk=4096, stdin_terminal=False)
+## readingproc.ReadingProc contructor(cmd, shell=True, read_chunk=4096, stdin_terminal=False)
 
 ## ReadingProc methods and attributes
 
@@ -27,15 +27,15 @@ Kill the process (send SIGKILL).
 ### Method terminate()
 Try to terminate the process (send SIGTERM).
 
-### Class ProcessData(stdout, stderr)
+### Class readingproc.ProcessData(stdout, stderr)
 A class descibing an item which is returned in every loop of ReadingProc.iter_run(). Access to stdout got: `data.stdout`, stderr: `data.stderr`.
 
-### Exception ProcessIsNotStartedError
+### Exception readingproc.ProcessIsNotStartedError
 It occurs when we call some methods of ReadingProc before calling start().
 
-### Exception ChunkTimeout
+### Exception readingproc.ChunkTimeout
 It occurs when chunk_timeout occurs while executing iter_run() of ReadingProc.
 
-### Exception TotalTimeout
+### Exception readingproc.TotalTimeout
 The exception occurs when total_timeout occurs while executing iter_run() of ReadingProc.
 
