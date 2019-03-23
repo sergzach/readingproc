@@ -1,6 +1,9 @@
 ## What's readingproc?
 
-There is a class of easy reading `stdout` and `stderr` of any process.
+There is a class for easy reading `stdout` and `stderr` of any process. 
+The next problems are solved:
+* Read blocking when we try to read stdout/stderr of a process. 
+* Stopping process properly. Just call one of the methods: `terminate()` or `kill()`.
 
 ### How to install
 
