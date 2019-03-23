@@ -19,7 +19,7 @@ Chunk of buffer when reading. Can be adjusted to small values to optimize memory
 
 `stdin_terminal: bool`
 
-Set to True if the program requires virtual terminal to work properly. Example: when calling docker command. Default value is False.
+Set to True if the program requires virtual terminal to work properly. Example: when calling `docker` command. Default value is False.
 
 ### Method iter_run(chunk_timeout=None, total_timeout=None)
 Iterate raw byte output (not waiting starting a new line).
