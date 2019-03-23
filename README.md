@@ -14,16 +14,12 @@ The next problems are solved:
 Let's get `stdout` of `tail -f file` for *10 seconds*. To read iterate with `iter_run()` method.
 
 ```
-from readingproc import ReadingProc, TotalTimeout
+from readingproc import ReadingProc
 
-proc = ReadingProc('tail -f my_file')
+proc = ReadingProc('cat my_file')
 proc.start()
-try:
-	for data in proc.iter_run(total_timeout=10.0):
-		print(data.stdout.decode())
-except TotalTimeout:
-	pass
-
+for data in proc.iter_run(total_timeout=10.0):
+	print(data.stdout.decode())
 ```
 
 ### 
