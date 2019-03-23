@@ -2,18 +2,18 @@
 
 ## ReadingProc methods and attributes
 
-### alive
+### Attribute alive
 True if a process is alive.
 
-### pid
+### Attribute pid
 Use this function to get a PID.
 If shell==True, this is the process ID of the spawned shell.
 To get source correct pid construct ReadingProc with shell=False.
 
-### start()
+### Method start()
 Run the process (call the function after the constructor and before iter_run()).
 
-### iter_run(chunk_timeout=None, total_timeout=None)
+### Method iter_run(chunk_timeout=None, total_timeout=None)
 Iterate raw byte output (not waiting starting a new line).
 Parameters:
 chunk_timeout: float
@@ -21,10 +21,10 @@ chunk_timeout: float
 total_timeout: float
  Timeout from start executing process; can only occurs in iter_run() loop.
 
-### kill()
+### Method kill()
 Kill the process (send SIGKILL).
 
-### terminate()
+### Method terminate()
 Try to terminate the process (send SIGTERM).
 
 ### Class ProcessData(stdout, stderr)
@@ -33,9 +33,9 @@ A class descibing an item which is returned in every loop of ReadingProc.iter_ru
 ### Exception ProcessIsNotStartedError
 It occurs when we call some methods of ReadingProc before calling start().
 
-### ChunkTimeout
+### Exception ChunkTimeout
 It occurs when chunk_timeout occurs while executing iter_run() of ReadingProc.
 
-### TotalTimeout
+### Exception TotalTimeout
 The exception occurs when total_timeout occurs while executing iter_run() of ReadingProc.
 
