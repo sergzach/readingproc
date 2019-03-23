@@ -11,7 +11,7 @@ Shell command to execute.
 
 `shell: bool`
 
-Use intermediate shell between calling python script and process (True) or not (False). True by default.
+Use intermediate shell between calling python script and process (True) or not (False). True by default. If True then `cmd` argument must be a list (in manner of the standart subprocess class).
 
 `read_chunk: int`
 
