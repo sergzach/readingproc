@@ -44,7 +44,7 @@ except ChunkTimeout:
     print('Error. No new lines for 10 seconds.')    
 ```
 
-*Read output for 60 seconds. If the duration exceeds then exception TotalTimeout occurs.*
+*Read output for 60 seconds. If time is up then TotalTimeout occurs.*
 ```python
 from readingproc import ReadingProc, TotalTimeout
 
@@ -60,7 +60,7 @@ except TotalTimeout:
     proc.terminate()
 ```
 
-*Getting control when expired, make some actions then continue reading output.*
+*Getting control when expired, make some actions and continue reading.*
 
 ```python
 from readingproc import ReadingProc, TotalTimeout
@@ -83,6 +83,6 @@ finally:
 
 ### Example Notes
 
-The examples are for `Python 3`. For `Python 2` you create the same code. `data.stdout` and `data.stderr` in `Python 2` have `str` type, in `Python 3` they have `bytes` type (processes send bytes which can be decoded to strings).
+The examples are for `Python 3`. For `Python 2` you create the same code. `data.stdout` and `data.stderr` in `Python 2` have `str` type, in `Python 3` they both have `bytes` type (processes send bytes which can be decoded into strings).
 
 [A very short API](API.md)
