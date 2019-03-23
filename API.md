@@ -37,5 +37,5 @@ It occurs when we call some methods of ReadingProc before calling start().
 It occurs when chunk_timeout occurs while executing iter_run() of ReadingProc.
 
 ### Exception readingproc.TotalTimeout
-The exception occurs when total_timeout occurs while executing iter_run() of ReadingProc.
+The exception occurs when total_timeout is expired while executing iter_run() of readingproc.ReadingProc.
 

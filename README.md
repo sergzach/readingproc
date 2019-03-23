@@ -81,4 +81,4 @@ finally:
     print('Process done, expiration status: {}.'.format(expired))
 ```
 
-[API Reference](API.md)
+[A very short API](API.md)
