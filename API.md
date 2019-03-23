@@ -4,16 +4,20 @@ The class constructor.
 Parameters
 
 `cmd: str`
- Shell command to execute.
+
+Shell command to execute.
 
 `shell: bool`
- Use intermediate shell between calling python script and process (True) or not (False). True by default.
+
+Use intermediate shell between calling python script and process (True) or not (False). True by default.
 
 `read_chunk: int`
- Chunk of buffer when reading. Can be adjusted to small values to optimize memory of Python program or to big values if a process which we try to read sends a lot of information to stdout (Python interpreter can hang trying to catch all the output if the value is too small). Default value is `ReadingProc._DEFAULT_READ_CHUNK`.
 
-stdin_terminal: bool
- Set to True if the program requires virtual terminal to work properly. Example: when calling docker command. Default value is False.
+Chunk of buffer when reading. Can be adjusted to small values to optimize memory of Python program or to big values if a process which we try to read sends a lot of information to stdout (Python interpreter can hang trying to catch all the output if the value is too small). Default value is `ReadingProc._DEFAULT_READ_CHUNK`.
+
+`stdin_terminal: bool`
+
+Set to True if the program requires virtual terminal to work properly. Example: when calling docker command. Default value is False.
 
 ## ReadingProc methods and attributes
 
@@ -35,9 +39,11 @@ Iterate raw byte output (not waiting starting a new line).
 Parameters:
 
 `chunk_timeout: float`
- Timeout to read one item in iter_run() loop.
+
+Timeout to read one item in iter_run() loop.
 `total_timeout: float`
- Timeout from start executing process; can only occurs in iter_run() loop.
+
+Timeout from start executing process; can only occurs in iter_run() loop.
 
 ### Method kill()
 Kill the process (send SIGKILL).
