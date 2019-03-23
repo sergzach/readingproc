@@ -1,14 +1,6 @@
-### ReadingProc
-```python
-ReadingProc(self, cmd, shell=True, read_chunk=4096, stdin_terminal=False)
-```
-The main class which can construct object to read process stdout and send to it's stdin.
+## ReadingProc contructor(cmd, shell=True, read_chunk=4096, stdin_terminal=False)
 
-# ReadingProc
-```python
-ReadingProc(self, cmd, shell=True, read_chunk=4096, stdin_terminal=False)
-```
-The main class which can construct object to read process stdout and send to it's stdin.
+## ReadingProc methods and attributes
 
 ### alive
 True if a process is alive.
@@ -18,56 +10,32 @@ Use this function to get a PID.
 If shell==True, this is the process ID of the spawned shell.
 To get source correct pid construct ReadingProc with shell=False.
 
-### start
-```python
-ReadingProc.start(self)
-```
+### start()
 Run the process (call the function after the constructor and before iter_run()).
 
-### iter_run
-```python
-ReadingProc.iter_run(self, chunk_timeout=None, total_timeout=None)
-```
+### iter_run(chunk_timeout=None, total_timeout=None)
 Iterate raw byte output (not waiting starting a new line).
-Parameters
+Parameters:
 chunk_timeout: float
  Timeout to read one item in iter_run() loop.
 total_timeout: float
  Timeout from start executing process; can only occurs in iter_run() loop.
 
-### kill
-```python
-ReadingProc.kill(self)
-```
+### kill()
 Kill the process (send SIGKILL).
 
-### terminate
-```python
-ReadingProc.terminate(self)
-```
+### terminate()
 Try to terminate the process (send SIGTERM).
 
-### ProcessData
-```python
-ProcessData(self, stdout, stderr)
-```
-A class descibing an item which is returned in every loop of ReadingProc.iter_run().
+### Class ProcessData(stdout, stderr)
+A class descibing an item which is returned in every loop of ReadingProc.iter_run(). Access to stdout got: `data.stdout`, stderr: `data.stderr`.
 
-### ProcessIsNotStartedError
-```python
-ProcessIsNotStartedError(self, /, *args, **kwargs)
-```
-The exception occurs when we call some methods of ReadingProc before calling start().
+### Exception ProcessIsNotStartedError
+It occurs when we call some methods of ReadingProc before calling start().
 
 ### ChunkTimeout
-```python
-ChunkTimeout(self, /, *args, **kwargs)
-```
-The exception occurs when chunk_timeout occurs while executing iter_run() of ReadingProc.
+It occurs when chunk_timeout occurs while executing iter_run() of ReadingProc.
 
 ### TotalTimeout
-```python
-TotalTimeout(self, /, *args, **kwargs)
-```
 The exception occurs when total_timeout occurs while executing iter_run() of ReadingProc.
 
