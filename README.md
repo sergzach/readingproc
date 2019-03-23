@@ -40,7 +40,7 @@ except ChunkTimeout:
 	print('Error. No new lines for 10 seconds.')	
 ```
 
-Read output maximum 60 seconds. If the time exceeds then exception TotalTimeout occurs.
+Read output for 60 seconds. If the duration exceeds then exception TotalTimeout occurs.
 ```
 from readingproc import ReadingProc, TotalTimeout
 
