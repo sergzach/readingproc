@@ -14,7 +14,7 @@ setup(
     package_dir={'readingproc': 'readingproc'},
     python_requires='>=2.7',
     setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'pathlib'],
+    tests_require=['pytest'],
     classifiers = [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
