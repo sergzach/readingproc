@@ -1,4 +1,6 @@
-## ReadingProc contructor(cmd, shell=True, read_chunk=4096, stdin_terminal=False)
+## ReadingProc methods and attributes
+
+### ReadingProc contructor(cmd, shell=True, read_chunk=4096, stdin_terminal=False)
 The class constructor.
 
 **Parameters**
@@ -18,8 +20,6 @@ Chunk of buffer when reading. Can be adjusted to small values to optimize memory
 `stdin_terminal: bool`
 
 Set to True if the program requires virtual terminal to work properly. Example: when calling docker command. Default value is False.
-
-## ReadingProc methods and attributes
 
 ### Method iter_run(chunk_timeout=None, total_timeout=None)
 Iterate raw byte output (not waiting starting a new line).
