@@ -6,13 +6,13 @@ import string
 
 
 def main():
-	l = int(sys.argv[1])
-	ch = 'h'
+    l = int(sys.argv[1])
+    ch = 'h'
 
-	for i in range(l):
-		sys.stdout.write(ch)
-	
+    for i in range(l):
+        sys.stdout.write(ch)
+    
 
 
 if __name__ == '__main__':
-	main()
+    main()
