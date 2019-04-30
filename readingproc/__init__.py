@@ -135,6 +135,7 @@ class ReadingProc:
         """
         self._proc = self._get_subprocess()
         self._pid = self._proc.pid
+        self._return_code = None
 
 
     @_check_started
@@ -175,8 +176,8 @@ class ReadingProc:
                         yield result
         except:
             raise
-        else:
-            self._proc.communicate()
+        else:            
+            self.join()
             self._proc = None
 
 
@@ -210,7 +211,17 @@ class ReadingProc:
         """
         True if a target process is alive.
         """
-        return self._proc is not None and self._proc.poll() is None    
+        return self._proc is not None and self._proc.poll() is None
+
+
+    def join(self):
+        self._proc.communicate()
+        self._return_code = self._proc.returncode
+
+
+    @property
+    def return_code(self):
+        return self._return_code
 
 
     @contextmanager

@@ -274,3 +274,28 @@ def test_read():
     sleep(0.1)
     data = proc.read()
     assert b'NOT_TTY' in data.stdout
+
+
+def _test_return_code(cmd):
+    proc = ReadingProc(cmd)
+    proc.start()
+    assert proc.return_code is None
+    sleep(4)
+    return proc
+
+
+@pytest.mark.return_code
+def test_return_code1():
+    proc = _test_return_code('sleep 3; nosuchcommand')
+    assert proc.return_code is None
+    proc.join()
+    assert proc.return_code != 0
+
+
+@pytest.mark.return_code
+def test_return_code():
+    proc = _test_return_code('sleep 3; echo "OK"')
+    assert proc.return_code is None
+    for data in proc.iter_run():
+        pass
+    assert proc.return_code == 0
