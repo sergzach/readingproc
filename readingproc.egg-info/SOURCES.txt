@@ -1,9 +1,0 @@
-README.md
-setup.cfg
-setup.py
-readingproc/__init__.py
-readingproc/unblock_read.py
-readingproc.egg-info/PKG-INFO
-readingproc.egg-info/SOURCES.txt
-readingproc.egg-info/dependency_links.txt
-readingproc.egg-info/top_level.txt
