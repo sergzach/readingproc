@@ -44,6 +44,22 @@ except ChunkTimeout:
     print('Error. No new lines for 10 seconds.')    
 ```
 
+*Reading output of several processes in one loop.*
+
+```python
+from readingproc import ReadingSet, ReadingProc
+
+# download all javascript files using by a google.com
+url = 'https://google.com'
+html_content = ''
+# firstly download the main page
+proc = ReadingProc('wget -O {}'.format(url))
+for proc in proc.iter_run():
+    html_content += proc.stdout.decode()
+# parse all js urls at the page
+re_js = '<script src=[\'"]'
+```
+
 *Read output for 60 seconds. If time is up then TotalTimeout occurs.*
 ```python
 from readingproc import ReadingProc, TotalTimeout
@@ -80,6 +96,45 @@ except TotalTimeout:
 finally:
     print('Process done, expiration status: {}.'.format(expired))
 ```
+
+*Reading pipes of many processes in one loop.*
+```python
+from readingproc import ReadingProc, ReadingSet
+
+patient_procs = {
+    'John': ReadingProc('tail -f /tmp/patient1.log'),
+    'Mike': ReadingProc('tail -f /tmp/patient2.log'),
+    'Helene': ReadingProc('tail -f /tmp/patient3.log')
+}
+
+reading_set = ReadingSet()
+for log in patient_procs:
+    proc = ReadingProc('tail -f {}'.format(log))
+    reading_set.add(patient_logs)
+
+# start all reading processes which have not been started yet
+reading_set.start_all()
+
+for data in reading_set.iter_run(total_timeout=10.0, chunk_timeout=1.0):
+    # ReadingProc supports the equal comparing
+    if data.reading_proc == patient_procs['John']:
+        # extracting necessary data
+        is_total_timeout = data.is_total_timeout
+        is_chunk_timeout = data.is_chunk_timeout
+        # stdout and stderr are None in case of any timeout
+        stdout = data.stdout
+        stderr = data.stderr
+        if is_chunk_timeout:
+            print('Alarm! John\'s device does not respond.')
+            # do not listen Mike and Helene any more
+            reading_set -= patient_procs['Mike']
+            reading_set -= patient_procs['Helene']
+
+# terminate all the processes which are alive
+reading_set.terminate_all()
+```
+
+
 
 ### Example Notes
 

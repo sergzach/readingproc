@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
 """
 Echo stdin back to user.
 """
 from __future__ import print_function
 import sys
+from time import sleep
 
 
 def main():

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Check if the program is attached to TTY.
 """

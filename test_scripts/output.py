@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Output as many random bytes as required at first parameter (it's output length).
 """
