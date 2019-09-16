@@ -249,8 +249,12 @@ class ReadingProc(object):
 
 
     def join(self):
-        self._proc.communicate()
-        self._return_code = self._proc.returncode
+        try:
+            self._proc.communicate()
+        except ValueError:
+            pass
+        finally:
+            self._return_code = self._proc.returncode
 
 
     @property
