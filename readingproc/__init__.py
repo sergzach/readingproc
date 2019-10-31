@@ -98,7 +98,7 @@ class ReadingProc(object):
     # incoming data)
     _DEFAULT_READ_CHUNK = 4096 # 4K
 
-    def __init__(self, cmd, shell=True, read_chunk=_DEFAULT_READ_CHUNK, stdin_terminal=False):
+    def __init__(self, cmd, shell=True, read_chunk=_DEFAULT_READ_CHUNK, stdin_terminal=False, cwd=None):
         """
         The class constructor.
         Parameters
@@ -115,11 +115,14 @@ class ReadingProc(object):
         stdin_terminal: bool
             Set to True if the program requires virtual terminal to work properly. Example: when calling \
             docker command. Default value is False.
+        cwd: str
+            A working directory for a new process.
         """
         self._cmd = cmd
         self._proc = None
         self._pid = None
         self._stdin_terminal = stdin_terminal
+        self._cwd = cwd
         self._shell = shell
         self._read_chunk = read_chunk
         self._chunk_time = None
@@ -338,7 +341,8 @@ class ReadingProc(object):
                 stderr=subprocess.PIPE,    
                 stdin=subprocess.PIPE,
                 preexec_fn=os.setpgrp,    
-                shell=self._shell)
+                shell=self._shell,
+                cwd=self._cwd)
         else:
             master, slave = pty.openpty()
 
@@ -349,6 +353,7 @@ class ReadingProc(object):
                 stdin=slave,
                 preexec_fn=os.setpgrp,
                 shell=self._shell,                
+                cwd=self._cwd,
                 close_fds=True)
 
             os.close(slave)

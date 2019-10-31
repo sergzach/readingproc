@@ -651,3 +651,18 @@ def test_timeout_proc():
     assert len(data_got) == num_procs - len(chunk_timeouts)
 
 
+@pytest.mark.work_dir
+def test_work_dir():
+    """
+    Testing cwd option.
+    """
+    proc = ReadingProc('cat echo_input.py', cwd=os.path.join(_CUR_PATH, 'test_scripts'))
+    proc.start()
+    output_lines = []
+    error_lines = []
+    for data in proc.iter_run():
+        output_lines.append(data.stdout.decode())
+        error_lines.append(data.stderr.decode())
+    assert all([l == '' for l in error_lines])
+    output = '\n'.join(output_lines)
+    assert '__main__' in output
