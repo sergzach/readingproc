@@ -20,6 +20,9 @@ from readingproc import     ReadingProc, \
                             ProcessIsNotStartedError, \
                             WrongReadingSetItem
 from readingproc.unblock_read import set_read_flags, get_read_flags, unblock_read
+from readingproc.thread_stdin_manager import \
+    ThreadStdinManager, \
+    ThreadStdinManagerFullBufferError
 
 
 _CUR_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -44,10 +47,12 @@ def _get_test_script_path(name):
     return os.path.join(_CUR_PATH, 'test_scripts/{}'.format(name))
 
 
-def _run_script(name, stdin_terminal=False):
+def _run_script(name, stdin_terminal=False, shell=True):
     path = _get_test_script_path(name)
 
-    proc = ReadingProc('{}'.format(path), stdin_terminal=stdin_terminal)
+    proc = ReadingProc( '{}'.format(path), \
+                        stdin_terminal=stdin_terminal,
+                        shell=shell)
     proc.start()
 
     return proc
@@ -666,3 +671,220 @@ def test_work_dir():
     assert all([l == '' for l in error_lines])
     output = '\n'.join(output_lines)
     assert '__main__' in output
+
+
+@pytest.fixture
+def send_stdin_manager():
+    """
+    Create ThreadStdinManager for the tests.
+    """
+    manager = ThreadStdinManager()
+    manager.start()
+    yield manager
+    manager.stop()
+
+
+@contextmanager
+def _test_thread_stdin_manager(msg):
+    """
+    A context manager with common code to test 
+    ThreadStdinManager() (non-blocking behaviour).
+    """
+    proc = _run_script('delay_read_stdin.py 1.0 10000')
+    start_time = time()
+    yield proc, start_time
+    sent_msg = b''
+    while True:        
+        sleep(2.0)
+        sent_data = proc.read()
+        if sent_data is not None:
+            sent_msg += sent_data.stdout
+            sleep(2.0)
+        else:
+            break
+    assert sent_msg == msg
+    proc.kill() 
+
+
+def test_thread_stdin_manager(send_stdin_manager):
+    """
+    A send stdin via ThreadStdinManager must not be blocking.
+    """
+    msg = b'test' * 20000
+    # test for the case when send without the manager
+    # test for the case when send with the manager
+    with _test_thread_stdin_manager(msg) as data:
+        proc, start_time = data
+        proc.send_stdin(msg)
+        end_time = time()
+        assert end_time - start_time > 0.5
+    with _test_thread_stdin_manager(msg) as data:
+        proc, start_time = data
+        send_stdin_manager.send_stdin(proc, msg)
+        end_time = time()
+        assert end_time - start_time < 0.1
+
+
+def test_thread_stdin_manager_buffer_error():
+    """
+    There is possible stdin overflow here.
+    """
+    msg = b'test' * 20000  
+    proc = _run_script('delay_read_stdin.py 20.0 %d' % len(msg))
+    send_stdin_manager = ThreadStdinManager(max_len=100)
+    send_stdin_manager.start()
+    try:
+        for i in range(200):
+            send_stdin_manager.send_stdin(proc, msg)
+            proc.read()
+            sleep(0.1)
+    except ThreadStdinManagerFullBufferError:
+        assert send_stdin_manager.stop(10.0)
+        send_stdin_manager = ThreadStdinManager(max_len=200)
+        send_stdin_manager.start()
+        proc.start()
+        for i in range(200):
+            send_stdin_manager.send_stdin(proc, msg)
+            proc.read()
+            sleep(0.2)
+        proc.kill()    
+        send_stdin_manager.stop()        
+    else:
+        assert False
+
+
+def test_thread_stdin_manager_no_buffer_error():
+    """
+    There is possible stdin overflow here.
+    """
+    msg = b'test' * 2500
+    data_sent = 0
+    proc = _run_script('delay_read_stdin.py 0.1 %d' % len(msg))
+    proc.start()
+    send_stdin_manager = ThreadStdinManager(max_len=100)
+    send_stdin_manager.start()    
+    try:
+        for i in range(1000):
+            send_stdin_manager.send_stdin(proc, msg)
+            # we must read the process periodically 
+            # otherwise send_stdin in send_stdin() will hang
+            proc.read()
+            data_sent += len(msg)
+            sleep(0.1)
+    except ThreadStdinManagerFullBufferError:
+        assert False
+    else:
+        assert True
+    finally:
+        send_stdin_manager.stop()
+
+
+class ManagerProc:
+    """
+    A coupled ThreadStdinManager and it's ReadingProc array.
+    """
+    def __init__(self, manager, procs):
+        """
+        Parameters
+        ----------
+        manager: ThreadStdinManager
+            A ThreadStdinManager objects.
+        procs: List[ReadingProc]
+            A list of corresponding ReadingProc objects.
+        """
+        self.manager = manager
+        self.procs = procs
+
+
+def _check_output_repeat(msg, output):
+    """
+    Return True if a message fully constists of output.
+    Otherwise return False.
+    Parameters
+    ----------
+    msg: Union[bytes, str]
+        A message.
+    output: Union[bytes, str]
+        An output.
+    """
+    if len(msg) < 1 or len(output) < 1:
+        return False
+    len_output = len(output)
+    for i in range(0, len(msg), len_output):
+        slice = msg[i: len_output]
+        if msg != slice:
+            import pdb; pdb.set_trace()
+            return False
+    return True
+
+
+def test_thread_stdin_manager_many():
+    """
+    Test 3 managers and 18 ReadingProcs.
+    A manager - 5 ReadingProc.
+    A manager - 3 ReadingProcs.
+    A manager - 10 ReadingProcs.
+    """
+    msg = b'test' * 2500
+    manager1 = ThreadStdinManager(max_len=50, job_timeout=1.0)
+    manager1.start()
+    manager2 = ThreadStdinManager(max_len=1000, job_timeout=1.0)
+    manager2.start()
+    manager3 = ThreadStdinManager(max_len=100, job_timeout=1.0)
+    manager3.start()
+    # constructing managers
+    procs_manager1 = []
+    procs_manager2 = []
+    procs_manager3 = []    
+    for i in range(5):
+        proc = _run_script('delay_read_stdin.py 0.5 %d' % len(msg), shell=False)
+        procs_manager1.append(proc)
+    for i in range(3):
+        proc = _run_script('delay_read_stdin.py 0.2 %d' % len(msg), shell=True)
+        procs_manager2.append(proc)
+    for i in range(10):
+        proc = _run_script('delay_read_stdin.py 0.1 %d' % len(msg), shell=False)
+        procs_manager3.append(proc)
+    # objects to check after the exceptions
+    all_manager_procs = {   manager1: procs_manager1,
+                            manager2: procs_manager2,
+                            manager3: procs_manager3}
+    active_manager_procs = dict(all_manager_procs)
+    output = {manager1: b'', manager2: b'', manager3: b''}
+    # testing
+    remove_managers = set([])
+    for i in range(1000):
+        read_time = 0.0
+        send_stdin_time = 0.0
+        for manager, procs in active_manager_procs.items():
+            try:
+                for proc in procs:
+                    start_sendstdin_time = time()
+                    manager.send_stdin(proc, msg)
+                    send_stdin_time += time() - start_sendstdin_time
+                    start_read_time = time()
+                    read_data = proc.read()
+                    read_time += time() - start_read_time
+                    if read_data is not None:
+                        output[manager] += read_data.stdout
+            except ThreadStdinManagerFullBufferError as e:
+                remove_managers.add(e.obj)
+        for manager in list(remove_managers):
+            del active_manager_procs[manager]
+            remove_managers.clear()
+        sleep(0.1)
+    # stopping to release threads
+    for procs in all_manager_procs.values():
+        for proc in procs:
+            proc.kill()
+    manager1.stop()
+    manager2.stop()
+    manager3.stop()
+    # post checking
+    assert len(active_manager_procs) == 2
+    assert manager2 in active_manager_procs
+    assert manager3 in active_manager_procs
+    # check that output has only message repeated at least
+    # one time
+    for manager in [manager1, manager2, manager3]:
+        assert _check_output_repeat(msg, output[manager1])
