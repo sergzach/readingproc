@@ -186,9 +186,9 @@ class ThreadStdinManager:
 
 
     @property
-    def queue_len(self):
+    def queue_size(self):
         """
-        Return a current length of messages.
+        Return a current length of message queue.
         """
         return self._messages.qsize()
 
