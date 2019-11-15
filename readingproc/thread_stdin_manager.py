@@ -185,6 +185,14 @@ class ThreadStdinManager:
                 'The message queue is full (max_len=%d).' % self._max_len)
 
 
+    @property
+    def queue_len(self):
+        """
+        Return a current length of messages.
+        """
+        return self._messages.qsize()
+
+
     def stop(self, timeout=None):
         """
         Stop sending thread.
