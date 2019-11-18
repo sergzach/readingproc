@@ -193,6 +193,14 @@ class ThreadStdinManager:
         return self._messages.qsize()
 
 
+    def _reset_messages(self):
+        """
+        Clean all existing messages (using in `stop()`).
+        """
+        while self._messages.qsize() > 0:
+            self._messages.get_nowait()
+
+
     def stop(self, timeout=None):
         """
         Stop sending thread.
@@ -200,12 +208,12 @@ class ThreadStdinManager:
         otherwise, in case of timeout, it returns False.
         """
         if self._t is None:
-            raise ThreadStdinManagerAlreadyStoppedError('The manager has been already stopped.')
+            raise ThreadStdinManagerAlreadyStoppedError('The manager has been already stopped.')        
         self._q_exit.put_nowait(None)
-        self._t.join(timeout)
-        if not self._t.is_alive():
-            self._q_exit.get_nowait()
+        self._t.join(timeout)     
+        self._q_exit.get_nowait()   
+        if not self._t.is_alive():            
             self._t = None
-            return True
-        self._q_exit.get_nowait()
+            self._reset_messages()            
+            return True        
         return False
