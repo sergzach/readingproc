@@ -47,12 +47,13 @@ def _get_test_script_path(name):
     return os.path.join(_CUR_PATH, 'test_scripts/{}'.format(name))
 
 
-def _run_script(name, stdin_terminal=False, shell=True):
+def _run_script(name, stdin_terminal=False, shell=True, env=None):
     path = _get_test_script_path(name)
 
     proc = ReadingProc( '{}'.format(path), \
                         stdin_terminal=stdin_terminal,
-                        shell=shell)
+                        shell=shell,
+                        env=env)
     proc.start()
 
     return proc
@@ -671,6 +672,17 @@ def test_work_dir():
     assert all([l == '' for l in error_lines])
     output = '\n'.join(output_lines)
     assert '__main__' in output
+
+
+@pytest.mark.env_vars
+def test_env_vars():
+    env_key = 'TEST_ENV'
+    env_val = 'test_val'
+    output = ''
+    proc = _run_script('test_env.py', env={env_key: env_val})
+    for data in proc.iter_run():
+        output += data.stdout.decode()
+    assert env_val in output
 
 
 @pytest.fixture

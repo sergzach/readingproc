@@ -95,6 +95,7 @@ class ReadingProc(object):
                     read_chunk=_DEFAULT_READ_CHUNK, 
                     stdin_terminal=False, 
                     cwd=None,
+                    env=None,
                     use_buffer=True):
         """
         The class constructor.
@@ -114,6 +115,8 @@ class ReadingProc(object):
             docker command. Default value is False.
         cwd: str
             A working directory for a new process.
+        env: dict
+            A dictionary of environmen variables. 
         use_buffer: bool
             If True then set bufsize of Popen to io.DEFAULT_BUFFER_SIZE (-1).
             Otherwise switch off the buffering.
@@ -123,6 +126,7 @@ class ReadingProc(object):
         self._pid = None
         self._stdin_terminal = stdin_terminal
         self._cwd = cwd
+        self._env = env
         self._shell = shell
         self._read_chunk = read_chunk
         self._chunk_time = None
@@ -364,7 +368,8 @@ class ReadingProc(object):
                 stdin=subprocess.PIPE,
                 preexec_fn=os.setpgrp,    
                 shell=self._shell,
-                cwd=self._cwd)
+                cwd=self._cwd,
+                env=self._env)
         else:
             master, slave = pty.openpty()
 
@@ -376,6 +381,7 @@ class ReadingProc(object):
                 preexec_fn=os.setpgrp,
                 shell=self._shell,                
                 cwd=self._cwd,
+                env=self._env,
                 close_fds=True)
 
             os.close(slave)
