@@ -316,6 +316,14 @@ def test_return_code():
     assert proc.return_code == 0
 
 
+def test_readingproc_destructor():
+    proc = ReadingProc('unknown_command')
+    proc.start()
+    for data in proc.iter_run():
+        pass
+    del proc
+
+
 def _terminate_or_kill(proc, i):
     """
     Perform process termination of killing depends on i % 2.
