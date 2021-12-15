@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='readingproc',        
-    version='0.1.0',        
+    version='0.2.0',        
     description='A class for easy reading output and interacting with stdin, stdout, stderr of '
                 'another process (simplifying using subprocess).',
     author='Sergey Zakharov',
