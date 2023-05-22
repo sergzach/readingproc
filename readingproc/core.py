@@ -53,6 +53,14 @@ class BufferFullError(Exception):
     pass
 
 
+class DontCallInIterRunError(Exception):
+    """
+    The exception occurs when a user try to call an invalid operation
+    after starting of iter_run() loop.
+    """
+    pass
+
+
 @contextmanager
 def _unblock_read(proc):
     """
@@ -96,7 +104,8 @@ class ReadingProc(object):
                     stdin_terminal=False, 
                     cwd=None,
                     env=None,
-                    use_buffer=True):
+                    use_buffer=True,
+                    executable=None):
         """
         The class constructor.
         Parameters
@@ -120,6 +129,9 @@ class ReadingProc(object):
         use_buffer: bool
             If True then set bufsize of Popen to io.DEFAULT_BUFFER_SIZE (-1).
             Otherwise switch off the buffering.
+        executable: str
+            A replacement program to execute (you can specify a path to shell,
+            for example).
         """
         self._cmd = cmd
         self._proc = None
@@ -132,6 +144,8 @@ class ReadingProc(object):
         self._chunk_time = None
         self._total_time = None
         self._use_buffer = use_buffer
+        # TODO: Add a test for executable argument!
+        self._executable = executable
 
 
     def __str__(self):
@@ -369,7 +383,8 @@ class ReadingProc(object):
                 preexec_fn=os.setpgrp,    
                 shell=self._shell,
                 cwd=self._cwd,
-                env=self._env)
+                env=self._env,
+                executable=self._executable)
         else:
             master, slave = pty.openpty()
 
@@ -382,7 +397,8 @@ class ReadingProc(object):
                 shell=self._shell,                
                 cwd=self._cwd,
                 env=self._env,
-                close_fds=True)
+                close_fds=True,
+                executable=self._executable)
 
             os.close(slave)
 
