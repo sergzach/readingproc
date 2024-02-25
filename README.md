@@ -1,5 +1,7 @@
 ## What's readingproc?
 
+A smart commit.
+
 There is a class for simple reading `stdout` and `stderr` of any process. 
 The next problems are solved:
 * Reading blocking when trying to read stdout/stderr of a process. 
