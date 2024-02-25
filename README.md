@@ -1,6 +1,10 @@
 ## What's readingproc?
 
+<<<<<<< HEAD
 A smart commit.
+=======
+Not important information.
+>>>>>>> 6399621 (Update README.md)
 
 There is a class for simple reading `stdout` and `stderr` of any process. 
 The next problems are solved:
